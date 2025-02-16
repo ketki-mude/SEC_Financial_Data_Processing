@@ -5,7 +5,7 @@ This project automates the ingestion, transformation, and validation of SEC fina
 ## **📌 Project Resources**
 - 📘 **Google Codelab:** [CodeLab](https://codelabs-preview.appspot.com/?file_id=1mBO6xQxSLutdNoxKHmQyAxqUgg8YdiZU9MckpMwRXxM#6)
 - 🌐 **App (Streamlit Cloud):** [Streamlit Link](https://dynaledger-ixvkclqgn7gofx9bzf6erk.streamlit.app/)
-- 🌍 **Apache Airflow:** [Airflow](http://34.145.156.207:8080/)
+- 🌍 **Apache Airflow:** [Airflow](http://34.145.156.207:8080)
 - 🎥 **YouTube Demo:** [YouTube Video](https://youtu.be/7x4iwCADyJA)
 
 ---
@@ -46,15 +46,6 @@ This project automates the ingestion, transformation, and validation of SEC fina
 ### **Step 4: JSON and Fact Table Processing**
 - If the user selects **JSON** and **Fact Table**, the respective pipeline in Snowflake processes the data.
 - The transformed data is displayed in **tables and graphs** for better visualization.
-
----
-
-## **📌 Contributions**
-| **Name** | **Contribution** |
-|----------|----------------|
-| **Janvi Bharatkumar Chitroda** | 33% - **DBT Data Loading**, **Snowflake**, **DBT Airflow Pipeline**, **Cloud Deployment**, **S3 Connection**. |
-| **Ketki Mude** | 33% - **JSON Conversion & Data Loading**, **Snowflake**, **S3 Connection**, **JSON Airflow Pipeline**. |
-| **Sahil Mutha** | 33% - **RAW Data Loading**, **Snowflake**, **S3 Connection**, **Streamlit**, **FastAPI**, **RAW Airflow Pipeline Deployment**. |
 
 ---
 
