@@ -1,0 +1,297 @@
+version: 2
+
+models:
+  - name: raw_num_table
+    description: "SEC financial numeric data"
+    columns:
+      - name: adsh
+        description: "Accession Number (Primary Key)"
+        tests:
+          - not_null
+
+      - name: tag
+        description: "XBRL reporting tag"
+        tests:
+          - not_null
+
+      - name: ddate
+        description: "Data period end date"
+        tests:
+          - not_null
+
+      - name: qtrs
+        description: "Number of quarters represented"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+
+      - name: uom
+        description: "Unit of measure (e.g., USD, shares)"
+        tests:
+          - not_null
+
+  - name: raw_tag_table 
+    description: "SEC taxonomy tag metadata"
+    columns:
+      - name: tag
+        description: "Unique identifier for the tag"
+        tests:
+          - not_null
+
+      - name: version
+        description: "Taxonomy version; if custom, the accession number"
+        tests:
+          - not_null
+
+      - name: custom
+        description: "1 if the tag is custom, 0 if it is standard"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+
+      - name: abstract
+        description: "1 if tag is abstract (non-numeric), 0 otherwise"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+
+      - name: datatype
+        description: "Data type of the tag (monetary, shares, perShare, percent, etc.)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [
+                'monetary', 'shares', 'perShare', 'percent', 'integer', 'decimal', 
+                'area', 'pure', 'mass', 'monetaryPerVolume'
+              ]
+
+      - name: iord
+        description: "Instant (I) or Duration (D) for tag values"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['I', 'D']
+
+      - name: crdr
+        description: "Credit (C) or Debit (D) for monetary tags"
+        tests:
+          - accepted_values:
+              values: ['C', 'D']
+
+      - name: tlabel
+        description: "Preferred label text for the tag"
+        tests:
+          - not_null
+
+# ----------------------------------------------- sub table ------------------------------------------
+  - name: raw_sub_table
+    description: "SEC submission data"
+    columns:
+      - name: adsh
+        description: "Accession Number (Primary Key)"
+        tests:
+          - not_null
+          - unique
+
+      - name: cik
+        description: "Central Index Key (CIK)"
+        tests:
+          - not_null
+
+      - name: name
+        description: "Registrant's legal entity name"
+        tests:
+          - not_null
+
+      - name: sic
+        description: "Standard Industrial Classification (SIC)"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 100
+              max_value: 9999
+
+      - name: countryba
+        description: "Registrant's business address country (ISO 3166-1)"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^[A-Z]{2}$"
+
+      - name: stprba
+        description: "State or province of business address (if applicable)"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^[A-Z]{2}$"
+
+      - name: zipba
+        description: "Zip code of the registrant's business address"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^[0-9A-Za-z -]+$"
+
+      # - name: baph
+      #   description: "Phone number of the registrant’s business address"
+      #   tests:
+      #     - dbt_expectations.expect_column_values_to_match_regex:
+      #         regex: "^[0-9 ()+\\-]+$"
+
+      - name: countryinc
+        description: "Country of incorporation (ISO 3166-1 Alpha-3)"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^[A-Z]{2,3}$"
+
+      - name: stprinc
+        description: "State or province of business address (if applicable)"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^[A-Z]{2}$"
+
+      # - name: ein
+      #   description: "Employer Identification Number"
+      #   tests:
+      #     - dbt_expectations.expect_column_values_to_match_regex:
+      #         regex: "^[0-9]{9}$"
+
+      # - name: afs
+      #   tests:
+      #     - dbt_expectations.expect_column_values_to_match_regex:
+      #         values: ["LAF", "ACC", "SRA", "NON", "SML"]
+
+      - name: wksi
+        description: "Well-Known Seasoned Issuer (1=True, 0=False)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+
+      - name: fye
+        description: "Fiscal Year End Date (mmdd format)"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^((0?[1-9]|1[0-2])[0-3][0-9])$"
+
+      - name: form
+        description: "The submission type of the registrant’s filing."
+        tests:
+          - not_null
+          # - dbt_expectations.expect_column_values_to_match_regex:
+          #     regex: "^[A-Za-z0-9-]+$"
+
+      - name: period
+        description: "Balance Sheet Date (YYMMDD format)"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^[0-9]{8}$"
+
+      - name: fy
+        description: "Fiscal Year Focus"
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1900
+              max_value: 2100
+
+      - name: fp
+        description: "Fiscal Period Focus"
+        tests:
+          - accepted_values:
+              values: ["FY", "Q1", "Q2", "Q3", "Q4", "H1", "H2", "M9", "T1", "T2", "T3", "M8", "CY"]
+
+      - name: filed
+        description: "Filing date"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^[0-9]{8}$"
+
+      - name: accepted
+        description: "Acceptance datetime"
+        tests:
+          - not_null
+          # - dbt_expectations.expect_column_values_to_match_regex:
+          #     regex: "^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$"
+
+      - name: prevrpt
+        description: "Indicates whether the submission was subsequently amended (1=True, 0=False)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+
+      - name: detail
+        description: "Indicates whether the XBRL submission contains detailed quantitative disclosures (1=True, 0=False)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+
+      - name: nciks
+        description: "Number of Central Index Keys (CIKs) in submission"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+
+      - name: aciks
+        description: "Additional CIKs of co-registrants in submission"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              regex: "^[0-9 ]*$"
+
+      - name: source_file
+        description: "Source file name"
+        tests:
+          - not_null
+
+# ----------------------------------------- pre table -------------------------------------------------
+
+  - name: raw_pre_table
+    description: "Presentation of Statements dataset (PRE) from SEC filings."
+    columns:
+      - name: adsh
+        description: "EDGAR Accession Number."
+        tests:
+          - not_null
+
+      - name: report
+        description: "Report identifier within statements."
+        tests:
+          - not_null
+
+      - name: line
+        description: "Sequential line number in the report."
+        tests:
+          - not_null
+          # - unique:
+          #     combination_of_columns: ["adsh", "report", "line"]
+
+      - name: stmt
+        description: "Financial statement type."
+        tests:
+          - accepted_values:
+              values: ['BS', 'IS', 'CF', 'EQ', 'CI', 'UN', 'CP', 'SI']
+
+      - name: tag
+        description: "XBRL tag assigned by the filer."
+        tests:
+          - not_null
+
+      - name: version
+        description: "Taxonomy version."
+        tests:
+          - not_null
+
+      - name: inpth
+        description: "Indicates if the value was presented parenthetically (0 or 1)."
+        tests:
+          - accepted_values:
+              values: [0, 1]
+
+      - name: plabel
+        description: "Preferred label for the tag."
+        tests:
+          - dbt_expectations.expect_column_value_lengths_to_be_between:
+              min_value: 1
+              max_value: 512

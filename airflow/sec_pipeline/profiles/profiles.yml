@@ -1,0 +1,13 @@
+sec_pipeline:
+  outputs:
+    dev:
+      account: jib93318.us-east-1
+      database: ASS2_DATABASE_FINAL
+      password: Rotlu@123
+      role: ACCOUNTADMIN
+      schema: SEC_DATA_DFT
+      threads: 10
+      type: snowflake
+      user: sahilmutha1999
+      warehouse: BigData_Ass2
+  target: dev

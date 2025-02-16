@@ -1,0 +1,26 @@
+For num.txt:
+    adsh: primary key has multiple duplicate values
+    qtrs: the number of quarters represented by the data value, rounded to the nearest whole number
+        0 point in-time value
+
+For tag.txt:
+    tag: primary key has multiple duplicate values
+
+For sub.txt:
+    afs: (2-ACC, 1-LAF, 4-NON) it has these extra values
+    ein: has multiple values that does not satisfy ^[0-9]{9}$ like have more than 9 digits 
+    sic: have values in 100s (3 didgit instead of 4)
+    form: ^[A-Za-z0-9-]+$
+    countryinc: null
+    fye: has 3 digits 
+    cityba: has null
+    fp: has null
+    fy: has null 
+    fye: has null
+    countryba: has null
+    accepted: 2023-02-13 08:24:00.0, 2023-02-22 19:49:00.0, 2023-02-06 18:36:00.0
+    baph: has values like ^[0-9 ()+\-]+$
+
+for pre.txt:
+    llabel: null values
+    

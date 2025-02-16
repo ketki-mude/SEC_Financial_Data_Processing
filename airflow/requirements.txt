@@ -1,0 +1,7 @@
+snowflake-connector-python
+bs4
+pandas
+pyarrow
+python-dotenv
+snowflake-sqlalchemy
+sqlalchemy

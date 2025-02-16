@@ -1,0 +1,12 @@
+bs4
+boto3
+apache-airflow
+pyarrow
+requests
+snowflake-connector-python
+python-dotenv
+pandas
+streamlit
+plotly
+fastapi
+uvicorn
